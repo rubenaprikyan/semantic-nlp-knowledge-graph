@@ -11,7 +11,13 @@ class PhysicsPostSpider(scrapy.Spider):
     name = "posts"
 
     def start_requests(self):
+        pages_count = 23
         urls = ["https://www.weltderphysik.de/service/suche"]
+        paginated_url = "https://www.weltderphysik.de/service/suche/?tx_solr%5Bpage%5D={page}"
+
+        for i in range(2, pages_count):
+            urls.append(paginated_url.format(page=i))
+
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
