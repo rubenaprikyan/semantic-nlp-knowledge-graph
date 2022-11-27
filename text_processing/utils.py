@@ -59,10 +59,6 @@ def sanitize_text(text):
     return text_without_stop_words
 
 
-import csv
-import pandas as pd
-
-
 # merge and remove duplicates from different maps
 def merge_word_maps(word_maps, roots):
     merged_map = {}
@@ -77,33 +73,3 @@ def merge_word_maps(word_maps, roots):
                     merged_map[root].append(w)
 
     return merged_map
-
-
-def process_content(file_name, roots, save_to):
-    maps = []
-    with open(file_name, 'r') as file:
-        csvreader = csv.reader(file)
-        for row in csvreader:
-            sanitized = sanitize_text(row[0])
-
-            word_map = find_words_map_by_roots(sanitized, roots)
-            maps.append(word_map)
-
-    result = merge_word_maps(maps, roots)
-
-    # write the result into csv file
-    if save_to:
-        with open(save_to, 'w') as file:
-            writer = csv.writer(file)
-            first_row = result.keys()
-            writer.writerow(first_row)
-
-            length = max([len(result[w]) for w in result])
-            for r in result:
-                if len(result[r]) < length:
-                    result[r] += (length - len(result[r])) * ['']
-            df = pd.DataFrame(result)
-            df.to_csv(save_to, index=False)
-            print(df)
-
-    return result

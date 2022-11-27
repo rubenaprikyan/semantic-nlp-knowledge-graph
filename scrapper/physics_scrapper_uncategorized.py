@@ -1,10 +1,6 @@
 import scrapy
 from bs4 import BeautifulSoup
-
-
-class ContentItem(scrapy.Item):
-    title = scrapy.Field()
-    content = scrapy.Field()
+from item_types import UncategorizedItem
 
 
 class PhysicsPostSpider(scrapy.Spider):
@@ -30,14 +26,15 @@ class PhysicsPostSpider(scrapy.Spider):
         return scrapy.Request(
             "https://www.weltderphysik.de" + link,
             callback=self.parse_page,
-            cb_kwargs=dict(title=title)
+            cb_kwargs=dict(title=title, link="https://www.weltderphysik.de" + link)
         )
 
-    def parse_page(self, response, title):
+    def parse_page(self, response, title, link):
         text = self.stripText(response.css(".ce-bodytext"))
-        item = ContentItem()
+        item = UncategorizedItem()
         item['title'] = title
         item['content'] = text
+        item['source'] = link
 
         return item
 

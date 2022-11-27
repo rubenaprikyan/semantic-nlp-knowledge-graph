@@ -1,12 +1,7 @@
 import scrapy
 from bs4 import BeautifulSoup
+from item_types import CategorizedItem
 
-
-class ContentItem(scrapy.Item):
-    parent = scrapy.Field()
-    category = scrapy.Field()
-    article = scrapy.Field()
-    link = scrapy.Field()
 
 # to get the menu items as category from the html below
 """
@@ -77,11 +72,11 @@ class PhysicsTaggedSpider(scrapy.Spider):
 
         content += self.strip_text(body)
 
-        item = ContentItem()
+        item = CategorizedItem()
         item['parent'] = parent
         item['category'] = category
-        item['article'] = content
-        item['link'] = link
+        item['content'] = content
+        item['source'] = link
 
         return item
 
