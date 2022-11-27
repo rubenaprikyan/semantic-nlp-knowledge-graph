@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-content.csv
+categorized_corpus.csv
+uncategorized_corpus.csv
 .idea

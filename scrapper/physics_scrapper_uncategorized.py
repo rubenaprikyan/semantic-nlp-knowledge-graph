@@ -11,7 +11,7 @@ class PhysicsPostSpider(scrapy.Spider):
     name = "posts"
 
     def start_requests(self):
-        pages_count = 23
+        pages_count = 12
         urls = ["https://www.weltderphysik.de/service/suche"]
         paginated_url = "https://www.weltderphysik.de/service/suche/?tx_solr%5Bpage%5D={page}"
 
@@ -22,10 +22,8 @@ class PhysicsPostSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        count = 0
         for item in response.css('.teaser-text'):
             post = [item.css('a::text').get(), item.css('a::attr(href)').get()]
-            count += 1
             yield self.request_page(link=post[1], title=post[0])
 
     def request_page(self, link, title):
@@ -46,4 +44,8 @@ class PhysicsPostSpider(scrapy.Spider):
     @staticmethod
     def stripText(selector):
         soup = BeautifulSoup(selector.get())
-        return soup.get_text().strip()
+        striped = ""
+        for line in soup.get_text().strip().splitlines():
+            striped += line
+            striped += " "
+        return striped
